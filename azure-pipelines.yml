@@ -4,31 +4,30 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
-
+- main
+ 
 pool:
   vmImage: ubuntu-latest
-
+ 
 steps:
-
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install
-    npx playwright install --with-deps
-  displayName: 'Install Dependencies'
-
-- script: |
-    npx playwright test
-  displayName: 'Run Playwright Tests'
-
+ 
+# 1. Install dependencies
+- script: npm install
+  displayName: Install dependencies
+ 
+# 2. Install Playwright browsers
+- script: npx playwright install --with-deps
+  displayName: Install Playwright browsers
+ 
+# 3. Run tests
+- script: npx playwright test
+  displayName: Run Playwright tests
+ 
+# 4. Publish test results (IMPORTANT)
 - task: PublishTestResults@2
+  condition: always()
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'test-results/results.xml'
     failTaskOnFailedTests: true
-    testRunTitle: 'Playwright Test Results'
-  condition: succeededOrFailed()
+  displayName: Publish test results
