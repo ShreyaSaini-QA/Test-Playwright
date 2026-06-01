@@ -1,0 +1,24 @@
+const { chromium } = require('playwright');
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.goto('https://www.defactoinfotech.com/', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.fill('#firstName', 'Test Shreya');
+  await page.fill('#lastName', 'Saini automation');
+  await page.fill('#email', 'shreya.saini@defactoinfotech.com');
+  await page.fill('#phoneNumber', '9876543210');
+  await page.fill('#companyName', 'Defacto');
+  await page.fill('#country', 'India');
+  await page.fill('#message', 'This is the test record');
+  await page.click('#submitDemo');
+  await page.waitForTimeout(10000);
+  const successLocator = page.locator('text=Thank you for contacting us');
+  console.log('SUCCESS_COUNT', await successLocator.count());
+  console.log('SUCCESS_VISIBLE', await successLocator.isVisible().catch(() => false));
+  const bodyText = await page.innerText('body');
+  console.log('BODY_TEXT_START', bodyText.slice(0, 2500));
+  const thankText = bodyText.match(/Thank[\s\S]{0,100}/g);
+  console.log('THANK_TEXT_MATCH', thankText && thankText.slice(0, 5));
+  await page.screenshot({ path: 'after-submit.png', fullPage: true });
+  await browser.close();
+})();

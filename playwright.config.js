@@ -82,5 +82,11 @@ export default defineConfig({
   //   url: 'http://localhost:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
+
+  timeout: 300000, // Set global timeout to 5 minutes (300,000 ms)
+
+  expect: {
+    timeout: 30000, // Set default assertion timeout to 30 seconds (30,000 ms)
+  },
 });
 
